@@ -11,9 +11,7 @@ namespace Module8
         private static readonly Random Random = new Random();
         private int _gridSize;
         private int turnCount;
-
         private Dictionary<int, Position> PriorGuesses;
-
         public GreenPlayer(string name)
         {
             Name = name;
@@ -23,6 +21,7 @@ namespace Module8
         {
             _gridSize = gridSize;
             _index = playerIndex;
+            PriorGuesses = new Dictionary<int, Position>();
             turnCount = -1;
 
             GenerateGuesses();
@@ -42,7 +41,7 @@ namespace Module8
                 var x = availableColumns[Random.Next(availableColumns.Count)];
                 availableColumns.Remove(x); //Make sure we can't pick it again
 
-                //Choose a Y based o nthe ship length and grid size so it always fits
+                //Choose a Y based on nthe ship length and grid size so it always fits
                 var y = Random.Next(gridSize - ship.Length);
                 ship.Place(new Position(x, y), Direction.Vertical);
             }
@@ -50,10 +49,11 @@ namespace Module8
 
         private void GenerateGuesses()
         {
-            //We want all instances of RandomPlayer to share the same pool of guesses
+            //We want all instances of GreenPlayer to share the same pool of random guesses
             //So they don't repeat each other.
 
-            //We need to populate the guesses list, but not for every instance - so we only do it if the set is missing some guesses
+            //We need to populate the guesses list, but not for every instance
+            //- so we only do it if the set is missing some guesses
             if (Guesses.Count < _gridSize * _gridSize)
             {
                 Guesses.Clear();
@@ -97,6 +97,8 @@ namespace Module8
 
         public void SetAttackResults(List<AttackResult> results)
         {
+            Position priorAttack = results[0].Position;
+            PriorGuesses.Add(turnCount, priorAttack);
             RecentAttacks.Add(results);
         }
 
