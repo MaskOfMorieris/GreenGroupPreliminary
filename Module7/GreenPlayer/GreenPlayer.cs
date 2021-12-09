@@ -3,6 +3,37 @@ using System.Collections.Generic;
 
 namespace Module8
 {
+    struct CompassPositions
+    {
+        private List<Position> compassList = new List<Position>();
+        public CompassPositions(Position center)
+        {
+            //North
+            int x = center.X;
+            int y = center.Y + 1;
+            compassList.Add(new Position(x, y));
+
+            //East
+            x = center.X + 1;
+            y = center.Y;
+            compassList.Add(new Position(x, y));
+
+            //South
+            x = center.X;
+            y = center.Y - 1;
+            compassList.Add(new Position(x, y));
+
+            //West
+            x = center.X - 1;
+            y = center.Y;
+            compassList.Add(new Position(x, y));
+        }
+
+        public Position North()
+        {
+            return compassList[0];
+        }
+    }
     internal class GreenPlayer : IPlayer
     {
         private static readonly List<Position> Guesses = new List<Position>();
@@ -11,7 +42,9 @@ namespace Module8
         private static readonly Random Random = new Random();
         private int _gridSize;
         private int turnCount;
+        private bool compass;
         private Dictionary<int, Position> PriorGuesses;
+
         public GreenPlayer(string name)
         {
             Name = name;
@@ -72,6 +105,7 @@ namespace Module8
 
         public Position GetAttackPosition()
         {
+            Position guess = new Position(0,0);
             if (turnCount >= 0)
             {
                 AttackResult lastAttack = RecentAttacks[turnCount][_index];
@@ -85,12 +119,22 @@ namespace Module8
                     }
                     else
                     {
-                        //use the CompassAttack()
+                        compass = true;
+                        guess = CompassAttack();
+                        Guesses.Remove(guess);
                     }
                 }
             }
-            var guess = Guesses[Random.Next(Guesses.Count)];
-            Guesses.Remove(guess); //Don't use this one again
+            else if (compass)
+            {
+                guess = CompassAttack();
+                Guesses.Remove(guess);
+            }
+            else
+            {
+                guess = Guesses[Random.Next(Guesses.Count)];
+                Guesses.Remove(guess); //Don't use this one again
+            }
             turnCount++; //Count that we made a guess
             return guess;
         }
@@ -104,8 +148,8 @@ namespace Module8
 
         private Position CompassAttack()
         {
-            //TODO: need to implement
-            return new Position(0,0);
+            Position lastAttack_pos = RecentAttacks[turnCount][_index].Position;
+            //Get all directional positions for next attacks
         }
     }
 }
