@@ -11,6 +11,8 @@ namespace Module8
         private static readonly Random Random = new Random();
         private int _gridSize;
 
+        private Dictionary<int, Position> PriorGuesses;
+
         public GreenPlayer(string name)
         {
             Name = name;
