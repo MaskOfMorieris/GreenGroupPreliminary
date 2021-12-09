@@ -6,6 +6,7 @@ namespace Module8
     internal class GreenPlayer : IPlayer
     {
         private static readonly List<Position> Guesses = new List<Position>();
+        private static List<List<AttackResult>> RecentAttacks = new List<List<AttackResult>>();
         private int _index;
         private static readonly Random Random = new Random();
         private int _gridSize;
@@ -78,6 +79,12 @@ namespace Module8
         public void SetAttackResults(List<AttackResult> results)
         {
             //Random player does nothing useful with these results, just keeps on making random guesses
+        }
+
+        private Position CompassAttack()
+        {
+            //TODO: need to implement
+            return new Position(0,0);
         }
     }
 }
