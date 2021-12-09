@@ -10,6 +10,7 @@ namespace Module8
         private int _index;
         private static readonly Random Random = new Random();
         private int _gridSize;
+        private int turnCount;
 
         private Dictionary<int, Position> PriorGuesses;
 
@@ -22,6 +23,7 @@ namespace Module8
         {
             _gridSize = gridSize;
             _index = playerIndex;
+            turnCount = -1;
 
             GenerateGuesses();
 
@@ -70,17 +72,32 @@ namespace Module8
 
         public Position GetAttackPosition()
         {
-            //RandomPlayer just guesses random squares. Its smart in that it never repeats a move from any other random 
-            //player since they share the same set of guesses
-            //But it doesn't take into account any other players guesses
+            if (turnCount >= 0)
+            {
+                AttackResult lastAttack = RecentAttacks[turnCount][_index];
+                if (turnCount >= 1)
+                {
+                    AttackResult attackBeforeLast = RecentAttacks[turnCount - 1][_index];
+                    if (lastAttack.ResultType == AttackResultType.Hit && 
+                    attackBeforeLast.ResultType == AttackResultType.Hit)
+                    {
+                        //get Direction to Attack in and make guess
+                    }
+                    else
+                    {
+                        //use the CompassAttack()
+                    }
+                }
+            }
             var guess = Guesses[Random.Next(Guesses.Count)];
             Guesses.Remove(guess); //Don't use this one again
+            turnCount++; //Count that we made a guess
             return guess;
         }
 
         public void SetAttackResults(List<AttackResult> results)
         {
-            //Random player does nothing useful with these results, just keeps on making random guesses
+            RecentAttacks.Add(results);
         }
 
         private Position CompassAttack()
