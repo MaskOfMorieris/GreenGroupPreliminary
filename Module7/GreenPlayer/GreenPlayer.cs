@@ -40,11 +40,11 @@ namespace Module8
         //Constructor to interpret received results to Dictionary format
         public DictionableResult(AttackResult eResult)
         {
-            pos = eResult.Position;
+            Position = eResult.Position;
             //give int a value due to struct reqs, use our unknown value
-            result = -1;
+            Result = -1;
             //replace the value with result type
-            result = AttackResultToInt(eResult.ResultType);
+            Result = AttackResultToInt(eResult.ResultType);
         }
 
         //Constructor to manually check for a Dictionary entry but not add to
