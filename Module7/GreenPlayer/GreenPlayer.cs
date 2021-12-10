@@ -5,9 +5,10 @@ namespace Module8
 {
     struct CompassPositions
     {
-        private List<Position> compassList = new List<Position>();
+        public List<Position> compassList {get; private set;}
         public CompassPositions(Position center)
         {
+            compassList = new List<Position>();
             //North
             int x = center.X;
             int y = center.Y + 1;
@@ -28,11 +29,6 @@ namespace Module8
             y = center.Y;
             compassList.Add(new Position(x, y));
         }
-
-        public Position North()
-        {
-            return compassList[0];
-        }
     }
     internal class GreenPlayer : IPlayer
     {
@@ -42,8 +38,9 @@ namespace Module8
         private static readonly Random Random = new Random();
         private int _gridSize;
         private int turnCount;
-        private bool compass;
+        private bool compassBool = false;
         private Dictionary<int, Position> PriorGuesses;
+        private CompassPositions comPos;
 
         public GreenPlayer(string name)
         {
@@ -117,18 +114,19 @@ namespace Module8
                     {
                         //get Direction to Attack in and make guess
                     }
-                    else
+                    else if (lastAttack.ResultType == AttackResultType.Hit)
                     {
-                        compass = true;
-                        guess = CompassAttack();
-                        Guesses.Remove(guess);
+                        compassBool = true;
+                        comPos = new CompassPositions(lastAttack.Position);
+                        guess = CompassAttack(comPos);
+                        Guesses.Remove(guess); //Remove from random guess list, too
                     }
                 }
             }
-            else if (compass)
+            else if (compassBool)
             {
-                guess = CompassAttack();
-                Guesses.Remove(guess);
+                guess = CompassAttack(comPos);
+                Guesses.Remove(guess); //Remove from random guess list, too
             }
             else
             {
@@ -146,10 +144,12 @@ namespace Module8
             RecentAttacks.Add(results);
         }
 
-        private Position CompassAttack()
+        private Position CompassAttack(CompassPositions comPos)
         {
-            Position lastAttack_pos = RecentAttacks[turnCount][_index].Position;
-            //Get all directional positions for next attacks
+            Position attackPosition = comPos.compassList[Random.Next(0, comPos.compassList.Count)];
+            comPos.compassList.Remove(attackPosition); //make sure to not use position again
+            if (comPos.compassList.Count == 0) compassBool = false; //Don't continue 'CompassAttack' when list is empty
+            return attackPosition;
         }
     }
 }
