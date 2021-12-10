@@ -2,32 +2,47 @@
 using System.Collections.Generic;
 
 namespace Module8
-{
+{ 
     struct CompassPositions
     {
-        public List<Position> compassList {get; private set;}
+        public List<Position> CompassList {get; private set;}
         public CompassPositions(Position center)
         {
-            compassList = new List<Position>();
+            CompassList = new List<Position>();
             //North
             int x = center.X;
             int y = center.Y + 1;
-            compassList.Add(new Position(x, y));
+            CompassList.Add(new Position(x, y));
 
             //East
             x = center.X + 1;
             y = center.Y;
-            compassList.Add(new Position(x, y));
+            CompassList.Add(new Position(x, y));
 
             //South
             x = center.X;
             y = center.Y - 1;
-            compassList.Add(new Position(x, y));
+            CompassList.Add(new Position(x, y));
 
             //West
             x = center.X - 1;
             y = center.Y;
-            compassList.Add(new Position(x, y));
+            CompassList.Add(new Position(x, y));
+        }
+
+        //If this bool, use a new guess from the last attack, out parameter assigns to guess
+        //  else assign null and false
+        public bool CheckCompassPosition(Position attackResult, out Position newGuess)
+        {
+            foreach (var compassPos in CompassList)
+            {
+                if (attackResult != compassPos) continue;
+                newGuess = attackResult;
+                return true;
+            }
+
+            newGuess = null;
+            return false;
         }
     }
     internal class GreenPlayer : IPlayer
@@ -38,7 +53,7 @@ namespace Module8
         private static readonly Random Random = new Random();
         private int _gridSize;
         private int turnCount;
-        private bool compassBool = false;
+        private bool compassBool;
         private Dictionary<int, Position> PriorGuesses;
         private CompassPositions comPos;
 
@@ -100,6 +115,40 @@ namespace Module8
         public string Name { get; }
         public int Index => _index;
 
+        //
+        //
+        //
+        
+        public Position NewGetAttackPosition()
+        {
+            //before any, remove guess from potential guesses
+
+            if (comPos.CompassList.Count == 0)
+            {
+                //if anyone's last attack was a hit, return first hit
+                                            // foreach (attackResult in attackResults)
+                                                    // if (attackResult = AttackResultType.Hit)
+                                                        //return attackResult;
+
+
+
+                //else return random
+            }
+
+            if (comPos.CompassList.Count == 1)
+            {
+                //return comPos[0] as guess
+            }
+
+            //return comPos.compassList[random]
+
+            return new Position(0, 0);
+        }
+
+        //
+        //
+        //
+        
         public Position GetAttackPosition()
         {
             Position guess = new Position(0,0);
@@ -116,6 +165,7 @@ namespace Module8
                     }
                     else if (lastAttack.ResultType == AttackResultType.Hit)
                     {
+
                         compassBool = true;
                         comPos = new CompassPositions(lastAttack.Position);
                         guess = CompassAttack(comPos);
@@ -146,9 +196,9 @@ namespace Module8
 
         private Position CompassAttack(CompassPositions comPos)
         {
-            Position attackPosition = comPos.compassList[Random.Next(0, comPos.compassList.Count)];
-            comPos.compassList.Remove(attackPosition); //make sure to not use position again
-            if (comPos.compassList.Count == 0) compassBool = false; //Don't continue 'CompassAttack' when list is empty
+            Position attackPosition = comPos.CompassList[Random.Next(0, comPos.CompassList.Count)];
+            comPos.CompassList.Remove(attackPosition); //make sure to not use position again
+            if (comPos.CompassList.Count == 0) compassBool = false; //Don't continue 'CompassAttack' when list is empty
             return attackPosition;
         }
     }
