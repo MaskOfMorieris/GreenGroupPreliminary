@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Module8;
 
-namespace Module8
+namespace CS3110_Module8_Green
 { 
     struct CompassPositions
     {
@@ -54,7 +55,7 @@ namespace Module8
         private int _gridSize;
         private int turnCount;
         private bool compassBool;
-        private Dictionary<int, Position> PriorGuesses;
+        private Dictionary<Position, AttackResultType> PriorGuesses;
         private CompassPositions comPos;
 
         public GreenPlayer(string name)
@@ -66,7 +67,7 @@ namespace Module8
         {
             _gridSize = gridSize;
             _index = playerIndex;
-            PriorGuesses = new Dictionary<int, Position>();
+            PriorGuesses = new Dictionary<Position, AttackResultType>();
             turnCount = -1;
 
             GenerateGuesses();
@@ -137,12 +138,12 @@ namespace Module8
 
             if (comPos.CompassList.Count == 1)
             {
-                //return comPos[0] as guess
+                //return comPos.CompassList[0]
             }
 
             //return comPos.compassList[random]
 
-            return new Position(0, 0);
+            return new Position(0,0);
         }
 
         //
@@ -189,7 +190,9 @@ namespace Module8
 
         public void SetAttackResults(List<AttackResult> results)
         {
+            turnCount++;
             Position priorAttack = results[0].Position;
+            Guesses.Remove(priorAttack);
             PriorGuesses.Add(turnCount, priorAttack);
             RecentAttacks.Add(results);
         }
