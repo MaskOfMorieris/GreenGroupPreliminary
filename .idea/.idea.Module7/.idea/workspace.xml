@@ -8,6 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c326f3b9-913e-4cd0-9b00-daf53c806e36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -66,13 +67,24 @@
       <option name="presentableId" value="Default" />
       <updated>1639005970772</updated>
       <workItem from="1639005974353" duration="4336000" />
+      <workItem from="1639097543895" duration="4278000" />
+      <workItem from="1639173385819" duration="4880000" />
     </task>
+    <task id="LOCAL-00001" summary="Proposed structure change">
+      <created>1639097669909</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1639097669909</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -84,8 +96,11 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Proposed structure change" />
+    <option name="LAST_COMMIT_MESSAGE" value="Proposed structure change" />
   </component>
 </project>
