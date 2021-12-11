@@ -114,7 +114,7 @@ namespace CS3110_Module8_Green
                 var x = availableColumns[rand.Next(availableColumns.Count)];
                 availableColumns.Remove(x); //Make sure we can't pick it again
 
-                //Choose a Y based on nthe ship length and grid size so it always fits
+                //Choose a Y based on the ship length and grid size so it always fits
                 var y = rand.Next(gridSize - ship.Length);
                 ship.Place(new Position(x, y), Direction.Vertical);
             }
@@ -194,10 +194,10 @@ namespace CS3110_Module8_Green
         //TODO: implement guessing, this is not correct logic =DONE=
                     if (RecentAttacks.Count == 0)
                     {
-                        var attack = Guesses[rand.Next(0, Guesses.Count)];
-                        Guesses.Remove(attack);
-                        return attack;
-                    }   
+                        var randPos = Guesses[rand.Next(0, Guesses.Count)];
+                        Guesses.Remove(randPos);
+                        return randPos;
+                    }
                     //
 
                     //Go through the hits and find out if there are any viable compass directions
@@ -213,6 +213,7 @@ namespace CS3110_Module8_Green
                         //check for viable position
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
+                            Guesses.Remove(compassPos);
                             return compassPos;
                         }
                     }
@@ -224,7 +225,11 @@ namespace CS3110_Module8_Green
                 {
                     //use null for possible pre-attack check
                     if (CheckPotentialGuesses(comPos.CompassList[0], -1))
-                        return comPos.CompassList[0];
+                    {
+                        var compassPos = comPos.CompassList[0];
+                        Guesses.Remove(compassPos);
+                        return compassPos;
+                    }
 
                     //clear list because only entry on it is invalid, won't reach if valid
                     comPos.CompassList.Clear();
@@ -240,7 +245,11 @@ namespace CS3110_Module8_Green
                     //if it's valid, select it
                     //  use null for potential pre-attack check
                     if (CheckPotentialGuesses(comPos.CompassList[randIndex], -1))
-                        return comPos.CompassList[randIndex];
+                    {
+                        var compassPos = comPos.CompassList[randIndex];
+                        Guesses.Remove(compassPos);
+                        return compassPos;
+                    }
 
                     //if not, remove it and try again
                     comPos.CompassList.Remove(comPos.CompassList[randIndex]);
