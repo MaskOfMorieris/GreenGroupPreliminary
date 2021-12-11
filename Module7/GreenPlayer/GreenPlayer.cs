@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Module8;
@@ -70,6 +70,7 @@ namespace CS3110_Module8_Green
             }
         }
     }
+
     internal class GreenPlayer : IPlayer
     {
         private static readonly List<Position> Guesses = new List<Position>();
@@ -136,18 +137,18 @@ namespace CS3110_Module8_Green
 
         public string Name { get; }
         public int Index => _index;
-        
+
 //Proposed change to structure
         //
         //
-        
+
         //Get results from last round, store the position and hit/miss to rule
         //  out potential guesses and/or create a list of hits to compass from if 
         //  our current compass is empty
-        
+
         //Will need to incorporate our list of remaining guesses
         //  by removing a miss but continuing to check until end or a hit
-        public void SetAttackResults(List<AttackResult> results)
+        void IPlayer.SetAttackResults(List<AttackResult> results)
         {
             DictionableResult hit;
 
@@ -161,19 +162,19 @@ namespace CS3110_Module8_Green
             {
                 hit = new DictionableResult(results[0].Position, -1);
             }
-            
+
             //This should only add the hit to recent attacks the first time
-            //  Not null result type as these are only reported attacks
+            //  Not -1 result type as these are only reported attacks
             if (CheckPotentialGuesses(hit.Position, hit.Result))
             {
                 //First time, store on hits so we can check compass if empty
                 RecentAttacks.Add(hit);
             }
         }
-        
+
         //This can (should?) be looped and is the primary decision making
         //  of the AI, with everything else contributing information to the decision
-                
+
         //Sequence: List > 1, List == 1, List == 0, Hit has possible compass, guess
         public Position GetAttackPosition()
         {
@@ -183,7 +184,7 @@ namespace CS3110_Module8_Green
                 //  if any valid compass direction, use that as guess
                 if (comPos.CompassList.Count == 0)
                 {
-            
+
                     //This is the last case scenario, guess random
         //TODO: implement guessing, this is not correct logic =DONE=
                     if (RecentAttacks.Count == 0)
@@ -193,7 +194,7 @@ namespace CS3110_Module8_Green
                         return attack;
                     }   
                     //
-                
+
                     //Go through the hits and find out if there are any viable compass directions
                     //  around them, return that position if true, and then the compass list is
                     //  repopulated
@@ -205,13 +206,9 @@ namespace CS3110_Module8_Green
                         RecentAttacks.Remove(hit);
 
                         //check for viable position
-                        foreach (var compassPos in comPos.CompassList)
+                        foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
-                            //Potential pre-check, use null to not add to dictionary yet if not found
-                            if (CheckPotentialGuesses(compassPos, -1))
-                            {
-                                return compassPos;
-                            }
+                            return compassPos;
                         }
                     }
                 }
@@ -223,26 +220,26 @@ namespace CS3110_Module8_Green
                     //use null for possible pre-attack check
                     if (CheckPotentialGuesses(comPos.CompassList[0], -1))
                         return comPos.CompassList[0];
-                
+
                     //clear list because only entry on it is invalid, won't reach if valid
                     comPos.CompassList.Clear();
                 }
-            
+
                 //otherwise, go through compassList
-                       
+
                 while (true)
                 {
                     //get random index
                     var randIndex = rand.Next(0, comPos.CompassList.Count);
-                
+
                     //if it's valid, select it
                     //  use null for potential pre-attack check
                     if (CheckPotentialGuesses(comPos.CompassList[randIndex], -1))
                         return comPos.CompassList[randIndex];
-                
+
                     //if not, remove it and try again
                     comPos.CompassList.Remove(comPos.CompassList[randIndex]);
-                
+
                     //if we get here, all on the list were bad, break and we'll
                     //go for recent hits or random guess
                     if (comPos.CompassList.Count == 0)
@@ -252,10 +249,10 @@ namespace CS3110_Module8_Green
                 }
             }
         }
-        
+
         //true == is potential guess == not in dictionary
         //false == not potential == is in dictionary
-        
+
         bool CheckPotentialGuesses(Position position, int result)
         {
             //store all attack results in dictionary
@@ -263,13 +260,11 @@ namespace CS3110_Module8_Green
             {
                 return false;
             }
-            
+
             PriorGuesses.Add(position, result);
             return true;
         }
-       
-                
-                
+
 //
 //
     }

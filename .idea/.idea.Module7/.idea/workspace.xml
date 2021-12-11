@@ -8,6 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c326f3b9-913e-4cd0-9b00-daf53c806e36" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -22,6 +23,15 @@
       </list>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/ph33r/Documents/GitHub/GreenGroupPreliminary/Module7/GreenPlayer/GreenPlayer.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="221XGEaiJsz4WhaKeeILMykha86" />
   <component name="ProjectLevelVcsManager">
@@ -41,6 +51,11 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
     <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="Push.Settings">
+    <force-push-targets>
+      <force-push-target remote-path="origin" branch="alphaBeta" />
+    </force-push-targets>
   </component>
   <component name="RunManager">
     <configuration name="Module7" type="DotNetProject" factoryName=".NET Project">
@@ -72,7 +87,7 @@
       <updated>1639005970772</updated>
       <workItem from="1639005974353" duration="4336000" />
       <workItem from="1639097543895" duration="4278000" />
-      <workItem from="1639173385819" duration="5519000" />
+      <workItem from="1639173385819" duration="6984000" />
     </task>
     <task id="LOCAL-00001" summary="Proposed structure change">
       <created>1639097669909</created>
@@ -88,7 +103,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639178401001</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="quick fix on struct variables">
+      <created>1639178954480</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1639178954480</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,6 +137,8 @@
     <MESSAGE value="Proposed structure change" />
     <MESSAGE value="not working until guess/attack logic connected, but selection just about done" />
     <MESSAGE value="not working until guess/attack logic connection, but selection just about done" />
-    <option name="LAST_COMMIT_MESSAGE" value="not working until guess/attack logic connection, but selection just about done" />
+    <MESSAGE value="quick fix on struct variables" />
+    <MESSAGE value="maybe now" />
+    <option name="LAST_COMMIT_MESSAGE" value="maybe now" />
   </component>
 </project>
