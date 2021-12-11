@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Module8;
@@ -8,6 +8,10 @@ namespace CS3110_Module8_Green
     struct CompassPositions
     {
         public List<Position> CompassList {get; private set;}
+        public CompassPositions()
+        {
+            CompassList = new List<Position>();
+        }
         public CompassPositions(Position center)
         {
             CompassList = new List<Position>();
@@ -91,6 +95,7 @@ namespace CS3110_Module8_Green
             _gridSize = gridSize;
             _index = playerIndex;
             PriorGuesses = new Dictionary<Position, int>();
+            comPos = new CompassPositions();
 
             GenerateGuesses();
 
