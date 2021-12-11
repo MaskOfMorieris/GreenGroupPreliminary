@@ -23,7 +23,10 @@ namespace Module8
             players.Add(new RandomPlayer("Random 5"));
 
             //Your code here
-            //players.Add(new GroupNPlayer());
+            players.Add(new CS3110_Module8_Green.GreenPlayer("Green 1"));
+            players.Add(new CS3110_Module8_Green.GreenPlayer("Green 2"));
+            players.Add(new CS3110_Module8_Green.GreenPlayer("Green 3"));
+            players.Add(new CS3110_Module8_Green.GreenPlayer("Green 4"));
 
             MultiPlayerBattleShip game = new MultiPlayerBattleShip(players);
             game.Play(PlayMode.Pause);
