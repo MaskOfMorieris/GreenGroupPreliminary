@@ -10,6 +10,10 @@
     <list default="true" id="c326f3b9-913e-4cd0-9b00-daf53c806e36" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Module7/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/GreenPlayer/GreenPlayer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module7/MultiPlayerBattleShip.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/MultiPlayerBattleShip.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module7/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module7/obj/Debug/Module7.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Module7/obj/Debug/Module7.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Module7/obj/Debug/Module7.csprojAssemblyReference.cache" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +84,8 @@
       <workItem from="1639097543895" duration="4278000" />
       <workItem from="1639173385819" duration="6984000" />
       <workItem from="1639180525627" duration="1487000" />
-      <workItem from="1639190722424" duration="5313000" />
+      <workItem from="1639190722424" duration="5385000" />
+      <workItem from="1639346982591" duration="3448000" />
     </task>
     <task id="LOCAL-00001" summary="Proposed structure change">
       <created>1639097669909</created>
@@ -103,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1639178954480</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="small updates, included the header, added comments, fixed a small logic error, noticed others that will need updated for sunday">
+      <created>1639196644355</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1639196644355</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -132,6 +144,7 @@
     <MESSAGE value="not working until guess/attack logic connection, but selection just about done" />
     <MESSAGE value="quick fix on struct variables" />
     <MESSAGE value="maybe now" />
-    <option name="LAST_COMMIT_MESSAGE" value="maybe now" />
+    <MESSAGE value="small updates, included the header, added comments, fixed a small logic error, noticed others that will need updated for sunday" />
+    <option name="LAST_COMMIT_MESSAGE" value="small updates, included the header, added comments, fixed a small logic error, noticed others that will need updated for sunday" />
   </component>
 </project>

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Module8;
+using System.IO;
 
 namespace CS3110_Module8_Green
 { 
@@ -103,11 +104,20 @@ namespace CS3110_Module8_Green
         private Dictionary<Position, int> PriorGuesses;
         private CompassPositions comPos;
 
+        //debug
+        private List<string> logChoices = new List<string>();
+        private int attackLogCount = 0;
+        
         public GreenPlayer(string name)
         {
             Name = name;
         }
 
+        public static void OutputLog(GreenPlayer greenPlayer)
+        {
+            File.WriteAllLines("debugLog.txt", greenPlayer.logChoices);
+        }
+        
         public void StartNewGame(int playerIndex, int gridSize, Ships ships)
         {
             _gridSize = gridSize;
@@ -206,18 +216,28 @@ namespace CS3110_Module8_Green
         //If the list is empty and there are no stored hits, use the base random guessing logic
         public Position GetAttackPosition()
         {
+            //*** whenever we get to this function, iterate count to add that to log so we can
+            //  see how many choices it made in a single loop
+            attackLogCount++;
+            
             while (true)
             {
                 //if compass is empty, check for hits, and make a compass on them
                 //  if any valid compass direction, use that as guess
                 if (comPos.CompassList.Count == 0)
                 {
-
+                    
+                    //state entered empty compass list
+                    logChoices.Add(attackLogCount + ". Decided Compass List was empty.");
+                    
                     //This is the last case scenario, guess random
                     if (RecentAttacks.Count == 0)
                     {
                         var randPos = Guesses[rand.Next(0, Guesses.Count)];
                         Guesses.Remove(randPos);
+                        
+                        //state returned random guess position
+                        logChoices.Add(attackLogCount + ". Chose->Guess (" + randPos.X  + ", " + randPos.Y + ")");
                         return randPos;
                     }
 
@@ -226,6 +246,10 @@ namespace CS3110_Module8_Green
                     //  repopulated
                     foreach (var hit in RecentAttacks)
                     {
+                        //state checking hits
+                        logChoices.Add(attackLogCount + ". Decided there were hits to check.");
+                        
+                        
                         //populate compass list
                         comPos = new CompassPositions(hit.Position);
                         //remove this hit from the list whether valid is found or not
@@ -236,6 +260,10 @@ namespace CS3110_Module8_Green
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
                             Guesses.Remove(compassPos);
+                            
+                            //state returned hitCompass
+                            logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
+                            
                             return compassPos;
                         }
                     }
@@ -245,15 +273,26 @@ namespace CS3110_Module8_Green
                 //after clearing the list if false
                 if (comPos.CompassList.Count == 1)
                 {
+                    //state 1 on compass list
+                    logChoices.Add(attackLogCount + ". Decided Compass List had 1 item on it.");
+                    
+                    
                     //use -1 struct as a random guess shouldn't have a result yet
                     //  but we still want to rule it out before firing if it does
                     if (CheckPotentialGuesses(comPos.CompassList[0], -1))
                     {
                         var compassPos = comPos.CompassList[0];
                         Guesses.Remove(compassPos);
+                        
+                        //state returned last on compass list
+                        logChoices.Add(attackLogCount + ". Chose->Last.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
+                        
                         return compassPos;
                     }
 
+                    //state cleared compass list
+                    logChoices.Add(attackLogCount + ". Decided to clear compass list.");
+                    
                     //clear list because only entry on it is invalid, won't reach if valid exists
                     comPos.CompassList.Clear();
                 }
@@ -264,6 +303,9 @@ namespace CS3110_Module8_Green
                 //  checking prior hits/random guess
                 while (true)
                 {
+                    //state entered compass list loop
+                    logChoices.Add(attackLogCount + ". Decided to check items on compass list.");
+                    
                     //get random index
                     var randIndex = rand.Next(0, comPos.CompassList.Count);
 
@@ -273,9 +315,16 @@ namespace CS3110_Module8_Green
                     {
                         var compassPos = comPos.CompassList[randIndex];
                         Guesses.Remove(compassPos);
+                        
+                        //state returned a compass list position
+                        logChoices.Add(attackLogCount + ". Chose->LoopFrom.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
+                        
                         return compassPos;
                     }
 
+                    //state removed compass list element
+                    logChoices.Add(attackLogCount + ". Decided to remove this item from the compass list.");
+                    
                     //if not, remove it and try again
                     comPos.CompassList.Remove(comPos.CompassList[randIndex]);
 
@@ -283,6 +332,9 @@ namespace CS3110_Module8_Green
                     //  run through base loop again and get to hits/random conditions
                     if (comPos.CompassList.Count == 0)
                     {
+                        //state the compass list emptied from loop removal
+                        logChoices.Add(attackLogCount + ". Decided the compass list was empty after looped removal and restarted outer loop.");
+                        
                         break;
                     }
                 }
