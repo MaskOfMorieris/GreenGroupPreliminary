@@ -135,10 +135,17 @@ namespace CS3110_Module8_Green
 
             if (_gridSize == 7) //need to place two ships in one column
             {
+                //to ensure we do not modify game list of ships
+                List<Ship> relistedShips = new List<Ship>();
+                foreach (var ship in ships._ships)
+                {
+                    relistedShips.Add(ship);
+                }
+
                 //Find the two smallest ships (to fit on one row)
                 Ship smallShipA = new AircraftCarrier();
                 Ship smallShipB = new AircraftCarrier();
-                foreach (var ship in ships._ships)
+                foreach (var ship in relistedShips)
                 {
                     if (ship.Length <= smallShipA.Length && ship.Length <= smallShipB.Length)
                     {
@@ -149,12 +156,12 @@ namespace CS3110_Module8_Green
                         smallShipB = ship;
                     }
                 }
-                //Exclude these for now, add them back after placement
-                ships._ships.Remove(smallShipA);
-                ships._ships.Remove(smallShipB);
+                //remove the two smallest ships from the list and add them at the end
+                relistedShips.Remove(smallShipA);
+                relistedShips.Remove(smallShipB);
 
                 //Now place the remaining ships
-                foreach (var ship in ships._ships)
+                foreach (var ship in relistedShips)
                 {
                     //Choose an X from the set of remaining columns
                     var x = availableColumns[rand.Next(availableColumns.Count)];
@@ -171,19 +178,15 @@ namespace CS3110_Module8_Green
                     var x = availableColumns[0];
                     availableColumns.Remove(x);
 
-                    //Set first at the top of the column, second will be right behind it
+                    //Set first ship at the top of the column, second will be right behind it
                     var y = 0;
                     smallShipA.Place(new Position(x, y), Direction.Vertical);
 
                     y = smallShipA.Length;
                     smallShipB.Place(new Position(x, y), Direction.Vertical);
                 }
-
-                //Re-add the small ships to our list
-                ships._ships.Add(smallShipA);
-                ships._ships.Add(smallShipB);
             }
-            else if (_gridSize > 7) //place like RandomPlayer
+            else if (_gridSize > 7) //place just like RandomPlayer
             {
                 foreach (var ship in ships._ships)
                 {
