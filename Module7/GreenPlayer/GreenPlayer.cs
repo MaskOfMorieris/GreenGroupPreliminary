@@ -1,5 +1,5 @@
 ﻿//----------------------------------------***-----------------------------------------|
-//             Christopher Toth, Duncan Myers, Carly Bryant, Justin Babin             |
+//             Christopher Toth, Duncan Myers, Carly Bryant, Joshua Babin             |
 //                            Module 8, Preliminary Group                             |
 //                                      12.10.21                                      |
 //------------------------------------------------------------------------------------|
@@ -9,10 +9,6 @@
 //   of cardinal directions generated on a recorded hit.  It will continue to work    |
 //  the list until all valid entries are attempted, then return to recorded hits and  |
 //                     create another list of cardinal directions                     |
-//----------------------------------------***-----------------------------------------|
-//  Known logic issue: player under some conditions will fail to select a new attack  |
-//    location and repeat, and under some conditions will not successfully leave a    |
-//                  cardinal direction list, also repeating entries                   |
 //----------------------------------------***-----------------------------------------|
 
 using System;
@@ -246,7 +242,6 @@ namespace CS3110_Module8_Green
                         
                         //state returned random guess position
                         logChoices.Add(attackLogCount + ". Chose->Guess (" + randPos.X  + ", " + randPos.Y + ")");
-                        return randPos;
                         return randPos; //assume these are always valid
                     }
 
