@@ -1,7 +1,25 @@
-﻿using System;
+﻿//----------------------------------------***-----------------------------------------|
+//             Christopher Toth, Duncan Myers, Carly Bryant, Justin Babin             |
+//                            Module 8, Preliminary Group                             |
+//                                      12.10.21                                      |
+//------------------------------------------------------------------------------------|
+//             Group submission for AI player for multiplayer battleship              |
+//------------------------------------------------------------------------------------|
+//This player currently implements ships randomly, and bases its attack around a list |
+//   of cardinal directions generated on a recorded hit.  It will continue to work    |
+//  the list until all valid entries are attempted, then return to recorded hits and  |
+//                     create another list of cardinal directions                     |
+//----------------------------------------***-----------------------------------------|
+//  Known logic issue: player under some conditions will fail to select a new attack  |
+//    location and repeat, and under some conditions will not successfully leave a    |
+//                  cardinal direction list, also repeating entries                   |
+//----------------------------------------***-----------------------------------------|
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Module8;
+using System.IO;
 
 namespace CS3110_Module8_Green
 { 
@@ -14,10 +32,14 @@ namespace CS3110_Module8_Green
         }
         public CompassPositions(Position center)
         {
+            var x = center.X;
+            var y = center.Y;
+
             CompassList = new List<Position>();
+            if (x < 0 || y < 0) return;
             //North
-            int x = center.X;
-            int y = center.Y + 1;
+            x = center.X;
+            y = center.Y + 1;
             CompassList.Add(new Position(x, y));
 
             //East
@@ -85,11 +107,20 @@ namespace CS3110_Module8_Green
         private static Dictionary<Position, int> PriorGuesses;
         private static CompassPositions comPos;
 
+        //debug
+        private List<string> logChoices = new List<string>();
+        private int attackLogCount = 0;
+        
         public GreenPlayer(string name)
         {
             Name = name;
         }
 
+        public static void OutputLog(GreenPlayer greenPlayer)
+        {
+            File.WriteAllLines("debugLog.txt", greenPlayer.logChoices);
+        }
+        
         public void StartNewGame(int playerIndex, int gridSize, Ships ships)
         {
             _gridSize = gridSize;
@@ -143,32 +174,30 @@ namespace CS3110_Module8_Green
         public string Name { get; }
         public int Index => _index;
 
-//Proposed change to structure
-        //
-        //
-
         //Get results from last round, store the position and hit/miss to rule
         //  out potential guesses and/or create a list of hits to compass from if 
         //  our current compass is empty
-
-        //Will need to incorporate our list of remaining guesses
-        //  by removing a miss but continuing to check until end or a hit
         void IPlayer.SetAttackResults(List<AttackResult> results)
         {
+            //struct to hold possible hit
             DictionableResult hit;
 
+            //LINQ query the results to see if any hit
             var checkedResult = results.Where(result => result.ResultType == AttackResultType.Hit);
 
+            //if query result found anything, take the first one it found
             if (checkedResult.Any())
             {
                 hit = new DictionableResult(checkedResult.First());
             }
-            else
+            else  //otherwise, create non-stored struct
             {
                 hit = new DictionableResult(results[0].Position, -1);
             }
 
-            //This should only add the hit to recent attacks the first time
+            //This should only add the hit to recent attacks the first time,
+            //  based on whether the DictionableStruct contains a valid hit
+            //  int conversion or -1
             //  Not -1 result type as these are only reported attacks
             if (CheckPotentialGuesses(hit.Position, hit.Result))
             {
@@ -176,44 +205,70 @@ namespace CS3110_Module8_Green
                 RecentAttacks.Add(hit);
             }
         }
-
-        //This can (should?) be looped and is the primary decision making
-        //  of the AI, with everything else contributing information to the decision
+        
 
         //Sequence: List > 1, List == 1, List == 0, Hit has possible compass, guess
+        //
+        //Loops through the above sequence until an acceptable return occurs
+        //  while there is a list of cardinal direction, check until all valid
+        //  cardinal directions have been hit, will adjust for changes from attacks
+        //  after the list is made
+        //If no list, check the stored attack hits using the compass check, and if any
+        //  stored hit has a valid cardinal direction guess, store all valid cardinal direction
+        //  to the compass list and stick to it until it's no longer valid
+        //If the list is empty and there are no stored hits, use the base random guessing logic
         public Position GetAttackPosition()
         {
+            //*** whenever we get to this function, iterate count to add that to log so we can
+            //  see how many choices it made in a single loop
+            attackLogCount++;
+            
             while (true)
             {
                 //if compass is empty, check for hits, and make a compass on them
                 //  if any valid compass direction, use that as guess
                 if (comPos.CompassList.Count == 0)
                 {
-
+                    
+                    //state entered empty compass list
+                    logChoices.Add(attackLogCount + ". Decided Compass List was empty.");
+                    
                     //This is the last case scenario, guess random
-        //TODO: implement guessing, this is not correct logic =DONE=
                     if (RecentAttacks.Count == 0)
                     {
                         var randPos = Guesses[rand.Next(0, Guesses.Count)];
                         Guesses.Remove(randPos);
+                        
+                        //state returned random guess position
+                        logChoices.Add(attackLogCount + ". Chose->Guess (" + randPos.X  + ", " + randPos.Y + ")");
+                        return randPos;
                         return randPos; //assume these are always valid
                     }
-                    //
 
                     //Go through the hits and find out if there are any viable compass directions
                     //  around them, return that position if true, and then the compass list is
                     //  repopulated
                     foreach (var hit in RecentAttacks)
                     {
+                        //state checking hits
+                        logChoices.Add(attackLogCount + ". Decided there were hits to check.");
+                        
+                        
                         //populate compass list
                         comPos = new CompassPositions(hit.Position);
-                        //remove this hit from the list
+                        //remove this hit from the list whether valid is found or not
                         RecentAttacks.Remove(hit);
 
-                        //check for viable position
+                        //check for viable position, return the first one, as later call of this
+                        //  function for next attack will check the remaining list positions
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
                             Guesses.Remove(compassPos);
+                            
+                            //state returned hitCompass
+                            logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
+                            
+                            return compassPos;
                             if (ValidatePosition(compassPos)) return compassPos; //only return if valid position on grid
                         }
                     }
@@ -223,7 +278,12 @@ namespace CS3110_Module8_Green
                 //after clearing the list if false
                 if (comPos.CompassList.Count == 1)
                 {
-                    //use null for possible pre-attack check
+                    //state 1 on compass list
+                    logChoices.Add(attackLogCount + ". Decided Compass List had 1 item on it.");
+                    
+                    
+                    //use -1 struct as a random guess shouldn't have a result yet
+                    //  but we still want to rule it out before firing if it does
                     if (CheckPotentialGuesses(comPos.CompassList[0], -1))
                     {
                         var compassPos = comPos.CompassList[0];
@@ -231,14 +291,22 @@ namespace CS3110_Module8_Green
                         if (ValidatePosition(compassPos)) return compassPos; //again, only if valid
                     }
 
-                    //clear list because only entry on it is invalid, won't reach if valid
+                    //state cleared compass list
+                    logChoices.Add(attackLogCount + ". Decided to clear compass list.");
+                    
+                    //clear list because only entry on it is invalid, won't reach if valid exists
                     comPos.CompassList.Clear();
                 }
 
-                //otherwise, go through compassList
-
+                //otherwise, go through compassList, check the cardinal directions
+                //  for validity and if valid, select as attack.  Remove all
+                //  entries whether valid or not, as cleared list is condition to 
+                //  checking prior hits/random guess
                 while (true)
                 {
+                    //state entered compass list loop
+                    logChoices.Add(attackLogCount + ". Decided to check items on compass list.");
+                    
                     //get random index
                     var randIndex = rand.Next(0, comPos.CompassList.Count);
 
@@ -259,31 +327,49 @@ namespace CS3110_Module8_Green
                         break;
                     }
 
+                    //state removed compass list element
+                    logChoices.Add(attackLogCount + ". Decided to remove this item from the compass list.");
+                    
                     //if not, remove it and try again
                     comPos.CompassList.Remove(comPos.CompassList[randIndex]);
 
-                    //if we get here, all on the list were bad, break and we'll
-                    //go for recent hits or random guess
+                    //If no valid cardinal directions on list, break out of loop to
+                    //  run through base loop again and get to hits/random conditions
                     if (comPos.CompassList.Count == 0)
                     {
+                        //state the compass list emptied from loop removal
+                        logChoices.Add(attackLogCount + ". Decided the compass list was empty after looped removal and restarted outer loop.");
+                        
                         break;
                     }
                 }
             }
         }
 
-        //true == is potential guess == not in dictionary
-        //false == not potential == is in dictionary
-
+        //True: position is valid for guess selection because it's not in the
+        //  dictionary
+        //False: position is not valid for guess selection because it is in
+        //  the dictionary
+        //      USAGE->Result: if int 0 or greater, this is a known attack which can be 
+        //          recorded in the dictionary, if a -int, this is a check only, 
+        //          and the position will not be recorded in the dictionary
+        
+        //When not in dictionary, uses 'int result' to determine whether
+        //  a Dictionary entry should be recorded, which create a flow
+        //  control in attack results being integers >= 0, and calls 
+        //  for unknown result check are passed with -int
         bool CheckPotentialGuesses(Position position, int result)
         {
-            //store all attack results in dictionary
+            //Present in dictionary, invalid for attack
             if (PriorGuesses.ContainsKey(position))
             {
                 return false;
             }
 
-            PriorGuesses.Add(position, result);
+            //not in dictionary, valid for attack, record or not
+            //  based on int arg
+            if (result >= 0)
+                PriorGuesses.Add(position, result);
             return true;
         }
 

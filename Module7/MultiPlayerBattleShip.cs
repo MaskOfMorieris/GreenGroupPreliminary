@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
+using CS3110_Module8_Green;
 
 namespace Module8
 {
@@ -124,6 +125,18 @@ namespace Module8
                 if (playMode == PlayMode.Pause)
                 {
                     Console.WriteLine("\nPress a key to continue");
+
+                    if (Console.ReadKey().Key == System.ConsoleKey.W)
+                    {
+                        foreach (var player in _players)
+                        {
+                            if (player.GetType() == typeof(GreenPlayer))
+                            {
+                                GreenPlayer.OutputLog((GreenPlayer)player);
+                            }
+                        }
+                    }
+                    
                     Console.ReadKey(true);
                 }
                 else
