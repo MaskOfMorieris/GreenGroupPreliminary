@@ -8,7 +8,7 @@ namespace CS3110_Module8_Green
     struct CompassPositions
     {
         public List<Position> CompassList {get; private set;}
-        public CompassPositions()
+        public CompassPositions(int nothing)
         {
             CompassList = new List<Position>();
         }
@@ -82,8 +82,8 @@ namespace CS3110_Module8_Green
         private int _index;
         private static readonly Random rand = new Random();
         private int _gridSize;
-        private Dictionary<Position, int> PriorGuesses;
-        private CompassPositions comPos;
+        private static Dictionary<Position, int> PriorGuesses;
+        private static CompassPositions comPos;
 
         public GreenPlayer(string name)
         {
@@ -95,7 +95,7 @@ namespace CS3110_Module8_Green
             _gridSize = gridSize;
             _index = playerIndex;
             PriorGuesses = new Dictionary<Position, int>();
-            comPos = new CompassPositions();
+            comPos = new CompassPositions(0);
 
             GenerateGuesses();
 
@@ -196,7 +196,7 @@ namespace CS3110_Module8_Green
                     {
                         var randPos = Guesses[rand.Next(0, Guesses.Count)];
                         Guesses.Remove(randPos);
-                        return randPos;
+                        return randPos; //assume these are always valid
                     }
                     //
 
@@ -214,7 +214,7 @@ namespace CS3110_Module8_Green
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
                             Guesses.Remove(compassPos);
-                            return compassPos;
+                            if (ValidatePosition(compassPos)) return compassPos; //only return if valid position on grid
                         }
                     }
                 }
@@ -228,7 +228,7 @@ namespace CS3110_Module8_Green
                     {
                         var compassPos = comPos.CompassList[0];
                         Guesses.Remove(compassPos);
-                        return compassPos;
+                        if (ValidatePosition(compassPos)) return compassPos; //again, only if valid
                     }
 
                     //clear list because only entry on it is invalid, won't reach if valid
@@ -244,11 +244,19 @@ namespace CS3110_Module8_Green
 
                     //if it's valid, select it
                     //  use null for potential pre-attack check
-                    if (CheckPotentialGuesses(comPos.CompassList[randIndex], -1))
+                    try
                     {
-                        var compassPos = comPos.CompassList[randIndex];
-                        Guesses.Remove(compassPos);
-                        return compassPos;
+                        if (CheckPotentialGuesses(comPos.CompassList[randIndex], -1))
+                        {
+                            var compassPos = comPos.CompassList[randIndex];
+                            Guesses.Remove(compassPos);
+                            if (ValidatePosition(compassPos)) return compassPos; //only if valid
+                        }
+                    }
+                    catch(System.ArgumentOutOfRangeException outOfRange)
+                    {
+                        //don't bother checking or continuing, the compass list is empty
+                        break;
                     }
 
                     //if not, remove it and try again
@@ -281,5 +289,16 @@ namespace CS3110_Module8_Green
 
 //
 //
+        /// <summary>
+        /// Validates whether a position is guessable on the current grid
+        /// </summary>
+        /// <param name="position">The position to check</param>
+        /// <returns>true if valid, false otherwise</returns>
+        bool ValidatePosition(Position position)
+        {
+            if (position.X >= _gridSize || position.Y >= _gridSize) return false;
+            else if (position.X < 0 || position.Y < 0) return false;
+            else return true;
+        }
     }
 }
