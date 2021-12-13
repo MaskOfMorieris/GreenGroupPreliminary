@@ -135,7 +135,53 @@ namespace CS3110_Module8_Green
 
             if (_gridSize == 7) //need to place two ships in one column
             {
-                //do stuff
+                //Find the two smallest ships (to fit on one row)
+                Ship smallShipA = new AircraftCarrier();
+                Ship smallShipB = new AircraftCarrier();
+                foreach (var ship in ships._ships)
+                {
+                    if (ship.Length <= smallShipA.Length && ship.Length <= smallShipB.Length)
+                    {
+                        smallShipA = ship;
+                    }
+                    else if (ship.Length <= smallShipB.Length)
+                    {
+                        smallShipB = ship;
+                    }
+                }
+                //Exclude these for now, add them back after placement
+                ships._ships.Remove(smallShipA);
+                ships._ships.Remove(smallShipB);
+
+                //Now place the remaining ships
+                foreach (var ship in ships._ships)
+                {
+                    //Choose an X from the set of remaining columns
+                    var x = availableColumns[rand.Next(availableColumns.Count)];
+                    availableColumns.Remove(x); //Make sure we can't pick it again
+
+                    //Choose a Y based on the ship length and grid size so it always fits
+                    var y = rand.Next(gridSize - ship.Length);
+                    ship.Place(new Position(x, y), Direction.Vertical);
+                }
+
+                if (availableColumns.Count == 1) //should be just one column left
+                {
+                    //Same column for both
+                    var x = availableColumns[0];
+                    availableColumns.Remove(x);
+
+                    //Set first at the top of the column, second will be right behind it
+                    var y = 0;
+                    smallShipA.Place(new Position(x, y), Direction.Vertical);
+
+                    y = smallShipA.Length;
+                    smallShipB.Place(new Position(x, y), Direction.Vertical);
+                }
+
+                //Re-add the small ships to our list
+                ships._ships.Add(smallShipA);
+                ships._ships.Add(smallShipB);
             }
             else if (_gridSize > 7) //place like RandomPlayer
             {

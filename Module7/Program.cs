@@ -13,9 +13,9 @@ namespace Module8
         static void Main(string[] args)
         {
             List<IPlayer> players = new List<IPlayer>();
-            players.Add(new DumbPlayer("Dumb 1"));
-            players.Add(new DumbPlayer("Dumb 2"));
-            players.Add(new DumbPlayer("Dumb 3"));
+            //players.Add(new DumbPlayer("Dumb 1"));
+            //players.Add(new DumbPlayer("Dumb 2"));
+            //players.Add(new DumbPlayer("Dumb 3"));
             //players.Add(new RandomPlayer("Random 1"));
             //players.Add(new RandomPlayer("Random 2"));
             //players.Add(new RandomPlayer("Random 3"));
