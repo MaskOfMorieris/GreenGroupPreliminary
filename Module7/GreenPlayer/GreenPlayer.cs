@@ -241,7 +241,6 @@ namespace CS3110_Module8_Green
                         
                         //state returned random guess position
                         logChoices.Add(attackLogCount + ". Chose->Guess (" + randPos.X  + ", " + randPos.Y + ")");
-                        return randPos;
                         return randPos; //assume these are always valid
                     }
 
@@ -264,12 +263,13 @@ namespace CS3110_Module8_Green
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
                             Guesses.Remove(compassPos);
-                            
-                            //state returned hitCompass
-                            logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
-                            
-                            return compassPos;
-                            if (ValidatePosition(compassPos)) return compassPos; //only return if valid position on grid
+
+                            if (ValidatePosition(compassPos)) 
+                            {
+                                //state returned hitCompass
+                                logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
+                                return compassPos; //only return if valid position on grid
+                            }
                         }
                     }
                 }
