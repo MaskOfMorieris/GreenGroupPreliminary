@@ -11,7 +11,7 @@ namespace Module8
 {
     internal class MultiPlayerBattleShip
     {
-        const int GridSize = 10; //Your player should work when GridSize >=7
+        const int GridSize = 7; //Your player should work when GridSize >=7
 
         private static readonly Random Random = new Random();
         private readonly List<IPlayer> _players;

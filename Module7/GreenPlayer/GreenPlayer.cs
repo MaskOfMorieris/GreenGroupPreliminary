@@ -130,24 +130,29 @@ namespace CS3110_Module8_Green
 
             GenerateGuesses();
 
-            //Random player just puts the ships in the grid in Random columns
-            //Note it cannot deal with the case where there's not enough columns
-            //for 1 per ship
+            //Puts the ships in the grid in Random columns
             var availableColumns = new List<int>();
             for (int i = 0; i < gridSize; i++)
             {
                 availableColumns.Add(i);
             }
 
-            foreach (var ship in ships._ships)
+            if (_gridSize == 7) //need to place two ships in one column
             {
-                //Choose an X from the set of remaining columns
-                var x = availableColumns[rand.Next(availableColumns.Count)];
-                availableColumns.Remove(x); //Make sure we can't pick it again
+                //do stuff
+            }
+            else if (_gridSize > 7) //place like RandomPlayer
+            {
+                foreach (var ship in ships._ships)
+                {
+                    //Choose an X from the set of remaining columns
+                    var x = availableColumns[rand.Next(availableColumns.Count)];
+                    availableColumns.Remove(x); //Make sure we can't pick it again
 
-                //Choose a Y based on the ship length and grid size so it always fits
-                var y = rand.Next(gridSize - ship.Length);
-                ship.Place(new Position(x, y), Direction.Vertical);
+                    //Choose a Y based on the ship length and grid size so it always fits
+                    var y = rand.Next(gridSize - ship.Length);
+                    ship.Place(new Position(x, y), Direction.Vertical);
+                }
             }
         }
 
@@ -264,12 +269,12 @@ namespace CS3110_Module8_Green
                         foreach (var compassPos in comPos.CompassList.Where(compassPos => CheckPotentialGuesses(compassPos, -1)))
                         {
                             Guesses.Remove(compassPos);
-                            
-                            //state returned hitCompass
-                            logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X  + ", " + compassPos.Y + ")");
-                            
-                            return compassPos;
-                            if (ValidatePosition(compassPos)) return compassPos; //only return if valid position on grid
+                            if (ValidatePosition(compassPos)) //only return if valid position on grid
+                            {
+                                //state returned hitCompass
+                                logChoices.Add(attackLogCount + ". Chose->Hit.CompassList (" + compassPos.X + ", " + compassPos.Y + ")");
+                                return compassPos;
+                            }
                         }
                     }
                 }
@@ -280,7 +285,6 @@ namespace CS3110_Module8_Green
                 {
                     //state 1 on compass list
                     logChoices.Add(attackLogCount + ". Decided Compass List had 1 item on it.");
-                    
                     
                     //use -1 struct as a random guess shouldn't have a result yet
                     //  but we still want to rule it out before firing if it does
@@ -323,7 +327,7 @@ namespace CS3110_Module8_Green
                     }
                     catch(System.ArgumentOutOfRangeException outOfRange)
                     {
-                        //don't bother checking or continuing, the compass list is empty
+                        //don't bother checking, the compass list is empty
                         break;
                     }
 
